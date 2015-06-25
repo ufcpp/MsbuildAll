@@ -36,4 +36,4 @@
 - githubルート直下に `packages`フォルダーを作る
 - 作った`packages`フォルダーに、`FluentArithmetic.1.0.0.0.nupkg` をコピーする
 
-その後、`build.bat`を実行。
+その後、`build`フォルダー内で`build.bat`を実行(Explorerからのダブルクリックでも可)。
