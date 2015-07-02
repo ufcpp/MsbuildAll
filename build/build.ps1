@@ -1,4 +1,14 @@
-﻿$Script:msbuild = .\Get-VsPath.ps1
+﻿param([hashtable] $set)
+
+if ($set -eq $null)
+{
+    $set = @{}
+}
+
+if ($Script:msbuild -eq $null)
+{
+    $Script:msbuild = .\Get-VsPath.ps1
+}
 
 function build
 {
@@ -16,12 +26,17 @@ function build-dependecy
 {
     process
     {
-        $Local:repo = $_
+        if ($set.ContainsKey($_))
+        {
+            return;
+        }
+
+        $set.Add($_, $false)
 
         try
         {
-            pushd $('..\..\' + $Local:repo + '\build')
-            & .\build.ps1
+            pushd $('..\..\' + $_ + '\build')
+            & .\build.ps1 $set
         }
         finally
         {
@@ -30,12 +45,12 @@ function build-dependecy
     }
 }
 
-cat ./solutions.txt | build
-
 if (Test-Path dependency.txt)
 {
     cat ./dependency.txt | build-dependecy
 }
+
+cat ./solutions.txt | build
 
 if (Test-Path postbuild.ps1)
 {
